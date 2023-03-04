@@ -10,8 +10,8 @@
         </div>
         <!-- flash message -->
         <div class="mb-3">
-            <inertia-link href="/posts/create" class="btn btn-md btn-primary"
-                >TAMBAH DATA</inertia-link
+            <Link href="/posts/create" class="btn btn-md btn-primary"
+                >TAMBAH DATA</Link
             >
         </div>
         <div class="card border-0 rounded shadow-sm">
@@ -28,7 +28,19 @@
                         <tr v-for="post in posts" :key="post.id">
                             <td>{{ post.title }}</td>
                             <td>{{ post.content }}</td>
-                            <td class="text-center"></td>
+                            <td class="text-center">
+                                <Link
+                                    :href="`/posts/${post.id}/update`"
+                                    class="btn btn-sm btn-primary me-2"
+                                    >EDIT</Link
+                                >
+                                <button
+                                    @click.prevent="deletePost(`${post.id}`)"
+                                    class="btn btn-sm btn-danger"
+                                >
+                                    DELETE
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -39,10 +51,12 @@
 
 <script>
 //import layout
-import LayoutApp from "../../Layouts/App.vue";
+import LayoutApp from "../../layouts/App.vue";
 
 //import Link dari inertia
 import { Link } from "@inertiajs/inertia-vue3";
+
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
     //layout
@@ -56,6 +70,18 @@ export default {
     //props
     props: {
         posts: Array, // <- nama props yang dibuat di controller saat parsing data
+    },
+
+    //define Composition Api
+    setup() {
+        //method deletePost
+        function deletePost(id) {
+            Inertia.delete(`/posts/${id}`);
+        }
+
+        return {
+            deletePost,
+        };
     },
 };
 </script>
